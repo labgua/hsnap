@@ -6,6 +6,7 @@ ss_info(){
 	echo "> revert <target> <zipfile>"
 	echo "> ftp_send <pathfile>"
 	echo "> rpc <function> [data]"
+	echo "> install_rpc"
 }
 
 if [[ $# == 0 ]]; then
@@ -75,6 +76,10 @@ rpc(){
 	echo ""
 }
 
+install_rpc(){
+
+}
+
 case $ACTION in
 	update)
 		if [[ $# -lt 3 ]]; then
@@ -90,11 +95,14 @@ case $ACTION in
 		fi
 		revert $2
 		;;
-	test_ftp)
+	ftp_send)
 		ftp_send $2
 		;;
-	test_rpc)
+	rpc)
 		rpc $2 $3
+		;;
+	install_rpc)
+		install_rpc
 		;;
 	*)
 		echo "Errore, Comando non conosciuto."
