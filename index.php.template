@@ -1,0 +1,41 @@
+<?
+
+$VERSION="1.0";
+$SECRET="###SECRET###";
+
+/*
+echo "Benvenuto.\n";
+foreach ($_POST as $key => $value) {
+	echo ">>> $key -> $value\n";
+}
+*/
+
+require_once "actions.php";
+
+if( $_POST["secret"] != $SECRET ) die("Non autorizzato.");
+if( !isset($_POST["_action"]) || empty($_POST["_action"]) ) die("Indicare il codice da eseguire");
+
+$action = "rpc_" . $_POST["_action"];
+echo $action();
+
+//// default functions
+
+function rpc_list_actions(){
+	$funcs = get_defined_functions()["user"];
+	foreach ($funcs as $value) {
+		if ( substr( $value, 0, 4 ) === "rpc_" ) {
+			$value = str_replace("rpc_", "", $value);
+			echo "$value\n";
+		}
+	}
+}
+
+function rpc_info(){
+	global $VERSION;
+	echo "Basic RPC Simple for PHP\n";
+	echo "LABGUA SOFTWARE 2020\n";
+	echo "Version: $VERSION\n";
+
+	echo "\nList Actions:\n";
+	rpc_list_actions();
+}
