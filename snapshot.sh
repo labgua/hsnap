@@ -4,7 +4,7 @@ ss_info(){
 	echo "List Actions"
 	echo "> update <target> <zipfile>"
 	echo "> revert <target> <zipfile>"
-	echo "> ftp_send <pathfile>"
+	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n}"
 	echo "> rpc <function> [data]"
 	echo "> install_rpc"
 }
