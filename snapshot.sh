@@ -62,10 +62,11 @@ revert(){
 }
 
 ftp_send(){
-	FILE_TO_UPLOAD=$1
+	UPLOAD_PATH=$1
+	FILE_TO_UPLOAD=$2
 	echo ">>> test_ftp()"
-	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$SS_PATH ..."
-	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$SS_PATH
+	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$UPLOAD_PATH ..."
+	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$UPLOAD_PATH
 	echo ">>> DONE"
 }
 
@@ -77,7 +78,7 @@ rpc(){
 }
 
 install_rpc(){
-
+	
 }
 
 case $ACTION in
@@ -96,7 +97,7 @@ case $ACTION in
 		revert $2
 		;;
 	ftp_send)
-		ftp_send $2
+		ftp_send $SS_PATH $2
 		;;
 	rpc)
 		rpc $2 $3
