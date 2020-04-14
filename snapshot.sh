@@ -80,8 +80,12 @@ rpc(){
 install_rpc(){
 	echo ">>> install_rpc()"
 	echo ">>> Installing rpc in $SS_PATH_RPC ..."
-	ftp_send $SS_PATH_RPC "index.php actions.php"
+	cp "index.php.template" "index.php"
+	sed -i "s/###SECRET###/$SS_SECRET/" "index.php"
+	ftp_send $SS_PATH_RPC "{index.php,actions.php}"
+	rm "index.php"
 	echo ">>> rpc URI: $SS_HOST$SS_PATH_RPC"
+	echo ">>> SECRET: $SS_SECRET"
 }
 
 case $ACTION in
