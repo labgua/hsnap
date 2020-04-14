@@ -66,19 +66,22 @@ ftp_send(){
 	FILE_TO_UPLOAD=$2
 	echo ">>> test_ftp()"
 	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$UPLOAD_PATH ..."
-	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$UPLOAD_PATH
+	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$UPLOAD_PATH --ftp-create-dirs
 	echo ">>> DONE"
 }
 
 rpc(){
 	ACTION=$1
 	POST_DATA=$2
-	curl -d "secret=$SS_SECRET&_action=$ACTION&$POST_DATA" "$SS_URL_RPC"
+	curl -d "secret=$SS_SECRET&_action=$ACTION&$POST_DATA" "$SS_HOST$SS_PATH_RPC"
 	echo ""
 }
 
 install_rpc(){
-	
+	echo ">>> install_rpc()"
+	echo ">>> Installing rpc in $SS_PATH_RPC ..."
+	ftp_send $SS_PATH_RPC "index.php actions.php"
+	echo ">>> rpc URI: $SS_HOST$SS_PATH_RPC"
 }
 
 case $ACTION in
