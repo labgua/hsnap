@@ -1,9 +1,16 @@
+ss_info(){
+	echo "snapshot.sh"
+	echo "LABGUA SOFTWARE 2020"
+	echo "List Actions"
+	echo "> update <target> <zipfile>"
+	echo "> revert <target> <zipfile>"
+	echo "> ftp_send <pathfile>"
+	echo "> rpc <function> [data]"
+}
 
 if [[ $# == 0 ]]; then
-	echo "Errore, selezionare una azione"
-	echo " > update <target> <zipfile>"
-	echo " > revert <target> <zipfile>"
-	exit -1
+	ss_info
+	exit 0
 fi
 
 #loading config
@@ -88,4 +95,8 @@ case $ACTION in
 		;;
 	test_rpc)
 		rpc $2 $3
+		;;
+	*)
+		echo "Errore, Comando non conosciuto."
+		;;
 esac
