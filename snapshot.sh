@@ -53,20 +53,12 @@ revert(){
 	fi
 }
 
-test_ftp(){
-	FILE_TO_UPLOAD=$1
-
-	echo ">>> test_ftp()"
-	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$SS_PATH ..."
-
-	ftp_send $FILE_TO_UPLOAD
-
-	echo ">>> DONE"
-}
-
 ftp_send(){
 	FILE_TO_UPLOAD=$1
+	echo ">>> test_ftp()"
+	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$SS_PATH ..."
 	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$SS_PATH
+	echo ">>> DONE"
 }
 
 rpc(){
@@ -75,7 +67,6 @@ rpc(){
 	curl -d "secret=$SS_SECRET&_action=$ACTION&$POST_DATA" "$SS_URL_RPC"
 	echo ""
 }
-
 
 case $ACTION in
 	update)
@@ -93,7 +84,7 @@ case $ACTION in
 		revert $2
 		;;
 	test_ftp)
-		test_ftp $2
+		ftp_send $2
 		;;
 	test_rpc)
 		rpc $2 $3
