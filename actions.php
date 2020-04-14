@@ -9,39 +9,44 @@ function rpc_hello(){
 
 function rpc_synczip(){
 
-	chdir("..");
-
 	$OUT = "";
+
+	chdir(ROOT_SERVER_PATH);
 
 	$namefile = $_POST["file"];
 	$path = $_POST["path"];
 
 	$zip = new ZipArchive;
 
+	$zip_snapshot_path = ROOT_SERVER_PATH . $namefile;
+	$extract_to_path = ROOT_SERVER_PATH . $path;
+
+	$OUT .= "syncZip: path_zip=$zip_snapshot_path\n";
+
 	if( $_POST["multipart"] == FALSE ){
-		if ($zip->open($namefile) === TRUE) {
-			$zip->extractTo($path);
+		if ($zip->open($zip_snapshot_path) === TRUE) {
+			$zip->extractTo($extract_to_path);
 			$zip->close();
-			$OUT .= "syncZip: extract action, ok\n";
+			$OUT .= "syncZip: extract to $extract_to_path, ok\n";
 		} else {
-		    $OUT .= "syncZip: extract action, failed\n";
+		    $OUT .= "syncZip: extract to $extract_to_path, failed\n";
 		    die($OUT);
 		}	
 	}
 	else{ //multipart
 		$OUT .= "syncZip: multipart extraction...";
-		$files = scandir($namefile);
+		$files = scandir(ROOT_SERVER_PATH . $namefile);
 		foreach ($files as $f) { // per ogni file....
 			if( strpos($f, '.zip') !== false){  // se è un file zip ....
-				if ($zip->open("$namefile/$f") === TRUE) { // aprilo...
-					$zip->extractTo($path); // estrailo nella cartella di destinazione
+				if ($zip->open(ROOT_SERVER_PATH . "$namefile/$f") === TRUE) { // aprilo...
+					$zip->extractTo($extract_to_path); // estrailo nella cartella di destinazione
 					$zip->close(); // chiudilo...
 
-					unlink("$namefile/$f"); // cancellalo (alla prossima chiamata PHP prenderà il prossimo)
+					unlink(ROOT_SERVER_PATH . "$namefile/$f"); // cancellalo (alla prossima chiamata PHP prenderà il prossimo)
 					
-					$OUT .= "syncZip: extract action part:$namefile/$f, ok\n";
+					$OUT .= "syncZip: extract to $extract_to_path part:$namefile/$f, ok\n";
 				} else {
-				    $OUT .= "syncZip: extract action, failed\n";
+				    $OUT .= "syncZip: extract to $extract_to_path part:$namefile/$f, failed\n";
 				    die($OUT);
 				}
 			}
@@ -50,7 +55,8 @@ function rpc_synczip(){
 
 
 	//gestione cancellazione file
-	chdir($path);
+	chdir( $extract_to_path );
+	$OUT .= "syncZip: change dir to $extract_to_path\n";
 	if( file_exists(".todelete") ){
 		$OUT .= "syncZip: found .todelete ...\n";
 		$todelete = fopen(".todelete","r");
@@ -67,6 +73,7 @@ function rpc_synczip(){
 		fclose($deleted);
 
 		unlink(".todelete");
+		unlink(".deleted");
 
 		$OUT .= "syncZip: files deleted, ok\n";
 	}
