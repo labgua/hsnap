@@ -23,32 +23,34 @@ update(){
 	TARGET=$1
 	OUT_ZIPFILE=$2
 	echo ">>> update()"
-	START_COMMIT=$(cat .snapshots)
+	START_COMMIT=$(git rev-parse --short $(cat .snapshots) )
 
 	echo ">>> update from $START_COMMIT to $TARGET ..."
 	git diff-tree -r --no-commit-id --name-only --diff-filter=D $START_COMMIT $TARGET > .todelete
-	echo "$TARGET" > .snapshots
+	echo $(git rev-parse --short "$TARGET") > .snapshots
 	LIST_FILES=$(git diff-tree -r --no-commit-id --name-only --diff-filter=ACMRT $START_COMMIT $TARGET)
 	LIST_FILES="$LIST_FILES\n.todelete\n.snapshots"
 
-	#echo ">>> creating zipfile $OUT_ZIPFILE ..."
-	#echo -e "$LIST_FILES" | zip -@ $OUT_ZIPFILE
+	echo ">>> creating zipfile $OUT_ZIPFILE ..."
+	echo -e "$LIST_FILES" | zip -@ $OUT_ZIPFILE
+	rm .todelete
 
-	#echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$SS_PATH ..."
-	#ftp_send $FILE_TO_UPLOAD
+	echo ">>> upload file:$OUT_ZIPFILE to $SS_FTP_HOST$SS_PATH ..."
+	ftp_send "/snap/" $OUT_ZIPFILE
 
-	#echo ">>> remote patching..."
-	#rpc "synczip" "file=XXXXX_snapshot.zip&path=PROJ_DIR/"
-	#echo "DONE"
+	echo ">>> remote patching..."
+	echo "rpc \"synczip\" \"file=/snap/$OUT_ZIPFILE&path=$SS_PATH\""
+	rpc "synczip" "file=/snap/$OUT_ZIPFILE&path=$SS_PATH"
+	echo "DONE"
 }
 
 revert(){
 	TARGET=$1
 	OUT_ZIPFILE=$2
 	echo ">>> revert()"
-	START_COMMIT=$(cat .snapshots)
+	START_COMMIT=$(git rev-parse --short $(cat .snapshots) )
 
-	echo -n "Creare un revert fino al commit $TARGET ? [y/n]: "
+	echo -n "Stai per creare un revert fino al commit $TARGET, ok? [y/n]: "
 	read ASK_REVERT
 
 	if [[ $ASK_REVERT == 'y' ]]; then
@@ -57,7 +59,9 @@ revert(){
 		git revert --no-commit $START_COMMIT..$TARGET  
 		git commit -m "Revert commit $START_COMMIT..$TARGET"
 
-		update "HEAD~1" "HEAD"
+		echo $(git rev-parse --short "HEAD") > .snapshots
+
+		update "HEAD" $OUT_ZIPFILE
 	fi
 }
 
@@ -94,14 +98,14 @@ case $ACTION in
 			echo "Errore parametri, definire il target e zipfile"
 			exit -1
 		fi
-		update $2
+		update $2 $3
 		;;
 	revert)
 		if [[ $# -lt 3 ]]; then
 			echo "Errore parametri, definire il target e zipfile"
 			exit -1
 		fi
-		revert $2
+		revert $2 $3
 		;;
 	ftp_send)
 		ftp_send $SS_PATH $2
