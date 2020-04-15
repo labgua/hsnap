@@ -72,6 +72,11 @@ ftp_send(){
 	echo ">>> DONE"
 }
 
+ftp_get(){
+	URI_PATH=$1
+	curl -u $SS_USER:$SS_PASS -O "ftp://$SS_FTP_HOST$URI_PATH"
+}
+
 rpc(){
 	ACTION=$1
 	POST_DATA=$2
