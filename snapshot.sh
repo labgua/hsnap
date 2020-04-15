@@ -48,7 +48,9 @@ revert(){
 	TARGET=$1
 	OUT_ZIPFILE=$2
 	echo ">>> revert()"
-	HEAD_SHA=$(git rev-parse --short HEAD)
+	echo ">>> reading remote state from .snapshots ..."
+	#HEAD_SHA=$(git rev-parse --short HEAD)
+	HEAD_SHA=$(curl -u $SS_USER:$SS_PASS -o - "ftp://$SS_FTP_HOST$SS_PATH.snapshots")
 
 	echo -n "Stai per creare un revert fino al commit $TARGET, ok? [y/n]: "
 	read ASK_REVERT
