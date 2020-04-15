@@ -48,18 +48,16 @@ revert(){
 	TARGET=$1
 	OUT_ZIPFILE=$2
 	echo ">>> revert()"
-	START_COMMIT=$(git rev-parse --short $(cat .snapshots) )
+	HEAD_SHA=$(git rev-parse --short HEAD)
 
 	echo -n "Stai per creare un revert fino al commit $TARGET, ok? [y/n]: "
 	read ASK_REVERT
 
 	if [[ $ASK_REVERT == 'y' ]]; then
-		echo ">>> revert from $START_COMMIT to $TARGET ..."
+		echo ">>> revert from HEAD:$HEAD_SHA to $TARGET ..."
 
-		git revert --no-commit $START_COMMIT..$TARGET  
-		git commit -m "Revert commit $START_COMMIT..$TARGET"
-
-		echo $(git rev-parse --short "HEAD") > .snapshots
+		git revert --no-commit $TARGET..HEAD
+		git commit -m "Revert commit $TARGET..HEAD:$HEAD_SHA"
 
 		update "HEAD" $OUT_ZIPFILE
 	fi
@@ -68,7 +66,7 @@ revert(){
 ftp_send(){
 	UPLOAD_PATH=$1
 	FILE_TO_UPLOAD=$2
-	echo ">>> test_ftp()"
+	echo ">>> ftp_send()"
 	echo ">>> upload file:$FILE_TO_UPLOAD to $SS_FTP_HOST$UPLOAD_PATH ..."
 	curl -T $FILE_TO_UPLOAD -u $SS_USER:$SS_PASS ftp://$SS_FTP_HOST$UPLOAD_PATH --ftp-create-dirs
 	echo ">>> DONE"
