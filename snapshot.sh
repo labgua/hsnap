@@ -161,22 +161,30 @@ init_project(){
 case $ACTION in
 	update)
 		if [[ $# -lt 3 ]]; then
-			echo "Errore parametri, definire il target e zipfile"
+			echo "$ACTION: Error, you must define <target> <zipfile>"
 			exit -1
 		fi
 		update $2 $3
 		;;
 	revert)
 		if [[ $# -lt 3 ]]; then
-			echo "Errore parametri, definire il target e zipfile"
+			echo "$ACTION: Error, you must define <target> <zipfile>"
 			exit -1
 		fi
 		revert $2 $3
 		;;
 	ftp_send)
+		if [[ $# -lt 2 ]]; then
+			echo "$ACTION: Error, you must define <pathfile>|{file-1,file-2,...,file-n}"
+			exit -1
+		fi
 		ftp_send $SS_PATH $2
 		;;
 	rpc)
+		if [[ $# -lt 2 ]]; then
+			echo "$ACTION: Error, you must define <function>"
+			exit -1
+		fi
 		rpc $2 $3
 		;;
 	install_rpc)
@@ -186,6 +194,7 @@ case $ACTION in
 		init_project
 		;;
 	*)
-		echo "Errore, Comando non conosciuto."
+		echo "$ACTION: unknown action"
+		exit -1
 		;;
 esac
