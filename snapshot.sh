@@ -2,6 +2,7 @@ ss_info(){
 	echo "snapshot.sh"
 	echo "LABGUA SOFTWARE 2020"
 	echo "List Actions"
+	echo "> init"
 	echo "> update <target> <zipfile>"
 	echo "> revert <target> <zipfile>"
 	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n}"
@@ -110,6 +111,53 @@ install_rpc(){
 	echo ">>> SECRET: $NEW_SS_SECRET"
 }
 
+init_project(){
+	echo ">>> check git project ..."
+	if [ -d ".git" ]; then
+		echo ">>> OK"
+	else
+		echo ">>> Error: this is not a git project"
+		echo ">>> try to make it with: 'git init'"
+		exit -1
+	fi
+
+	echo ">>> checking .gitignore ..."
+	if [ ! -f ".gitignore" ]; then
+		echo ">>> not found .gitignore, making ..."
+		touch .gitignore
+	fi
+
+	echo ">>> checking for snapshot.sh rules ..."
+	cat ".gitignore" | grep "###> snapshot.sh ignore" >/dev/null
+	if [[ $? == 0 ]]; then
+		echo ">>> OK"
+	else
+		echo ">>> NO rules, adding to .gitignore ..."
+
+		echo "" >> .gitignore
+		echo "###> snapshot.sh ignore ###" >> .gitignore
+		echo "actions.php" >> .gitignore
+		echo "index.php.template" >> .gitignore
+		echo "snapshot.sh" >> .gitignore
+		echo ".conf.snapshot" >> .gitignore
+		echo ".snapshots" >> .gitignore
+		echo "###< snapshot.sh ignore ###" >> .gitignore
+
+		echo ">>> resync git repo with new .gitignore file"
+		#https://stackoverflow.com/questions/7075923/resync-git-repo-with-new-gitignore-file
+		git rm -r --cached .
+		git add .
+		git commit -m "setting .gitignore for snapshot.sh"
+	fi
+
+
+	echo ">>> committing the installation ..."
+	git commit -m "snapshot.sh installed [empty commit]" --allow-empty
+	git rev-parse --short HEAD > .snapshots
+
+	echo ">>> DONE"
+}
+
 case $ACTION in
 	update)
 		if [[ $# -lt 3 ]]; then
@@ -133,6 +181,9 @@ case $ACTION in
 		;;
 	install_rpc)
 		install_rpc
+		;;
+	init)
+		init_project
 		;;
 	*)
 		echo "Errore, Comando non conosciuto."
