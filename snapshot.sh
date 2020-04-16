@@ -41,7 +41,7 @@ update(){
 	echo ">>> remote patching..."
 	echo "rpc \"synczip\" \"file=/snap/$OUT_ZIPFILE&path=$SS_PATH\""
 	rpc "synczip" "file=/snap/$OUT_ZIPFILE&path=$SS_PATH"
-	echo "DONE"
+	echo ">>> DONE"
 }
 
 revert(){
