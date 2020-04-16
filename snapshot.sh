@@ -3,11 +3,11 @@ ss_info(){
 	echo "LABGUA SOFTWARE 2020"
 	echo "List Actions"
 	echo "> init"
+	echo "> install_rpc"
 	echo "> update <target> <zipfile>"
 	echo "> revert <target> <zipfile>"
 	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n}"
 	echo "> rpc <function> [data]"
-	echo "> install_rpc"
 }
 
 if [[ $# == 0 ]]; then
