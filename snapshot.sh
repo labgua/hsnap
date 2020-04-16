@@ -94,12 +94,20 @@ rpc(){
 install_rpc(){
 	echo ">>> install_rpc()"
 	echo ">>> Installing rpc in $SS_PATH_RPC ..."
+
+	echo ">>> Updating .conf.snapshot with new secret ..."
+	NEW_SS_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+	sed -i "s/$SS_SECRET/$NEW_SS_SECRET/" ".conf.snapshot"
+
+	echo ">>> Generating php rpc server ..."
 	cp "index.php.template" "index.php"
-	sed -i "s/###SECRET###/$SS_SECRET/" "index.php"
+	sed -i "s/###SECRET###/$NEW_SS_SECRET/" "index.php"
+
+	echo ">>> Sending to host ..."
 	ftp_send $SS_PATH_RPC "{index.php,actions.php}"
 	rm "index.php"
 	echo ">>> rpc URI: $SS_HOST$SS_PATH_RPC"
-	echo ">>> SECRET: $SS_SECRET"
+	echo ">>> SECRET: $NEW_SS_SECRET"
 }
 
 case $ACTION in
