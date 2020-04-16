@@ -1,0 +1,10 @@
+SS_HOST="https://host.domain.com"
+
+SS_USER="username_ftp"
+SS_PASS="password_ftp"
+SS_FTP_HOST="ftphost.domain.com"
+SS_FTP_PORT="21"
+SS_PATH="/path/of/project/"
+
+SS_SECRET="MAGICSECRET"
+SS_PATH_RPC="/path/to/rpc/"
