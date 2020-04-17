@@ -103,6 +103,7 @@ install_rpc(){
 	echo ">>> Generating php rpc server ..."
 	cp "index.php.template" "index.php"
 	sed -i "s/###SECRET###/$NEW_SS_SECRET/" "index.php"
+	sed -i "s/###DIR_INST###/$SS_PATH_RPC/" "index.php"
 
 	echo ">>> Sending to host ..."
 	ftp_send $SS_PATH_RPC "{index.php,actions.php}"
