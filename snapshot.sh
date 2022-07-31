@@ -1,3 +1,9 @@
+
+#loading config & set working directory
+SS_DIR=$(dirname "$0")
+cd "$SS_DIR"
+source .conf.snapshot
+
 ss_info(){
 	echo "snapshot.sh"
 	echo "LABGUA SOFTWARE 2020"
@@ -6,7 +12,7 @@ ss_info(){
 	echo "> install_rpc"
 	echo "> update <target> <zipfile>"
 	echo "> revert <target> <zipfile>"
-	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n}"
+	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n} [! PWD: $PWD]"
 	echo "> rpc <function> [data]"
 }
 
@@ -15,10 +21,6 @@ if [[ $# == 0 ]]; then
 	exit 0
 fi
 
-#loading config & set working directory
-SS_DIR=$(dirname "$0")
-cd "SS_DIR"
-source .conf.snapshot
 cd "$SS_WORKING_DIR"
 
 ACTION=$1
