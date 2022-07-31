@@ -3,16 +3,18 @@
 SS_DIR=$(dirname "$0")
 cd "$SS_DIR"
 source .conf.snapshot
+cd "$SS_WORKING_DIR"
 
 ss_info(){
 	echo "snapshot.sh"
 	echo "LABGUA SOFTWARE 2020"
+	echo "(PWD): $PWD"
 	echo "List Actions"
 	echo "> init"
 	echo "> install_rpc"
 	echo "> update <target> <zipfile>"
 	echo "> revert <target> <zipfile>"
-	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n} [! PWD: $PWD]"
+	echo "> ftp_send <pathfile>|{file-1,file-2,...,file-n} [! PWD]"
 	echo "> rpc <function> [data]"
 }
 
@@ -20,8 +22,6 @@ if [[ $# == 0 ]]; then
 	ss_info
 	exit 0
 fi
-
-cd "$SS_WORKING_DIR"
 
 ACTION=$1
 
