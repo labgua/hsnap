@@ -5,9 +5,9 @@ cd "$SS_DIR"
 source .conf.snapshot
 cd "$SS_WORKING_DIR"
 
-echo "snapshot.sh"
+echo "HSnap"
 echo "LABGUA SOFTWARE 2020"
-echo "(PWD): $PWD"
+echo "(WORKING_DIR): $PWD"
 
 ss_info(){
 	echo "List Actions"
@@ -60,11 +60,11 @@ revert(){
 	HEAD_SHA=$(curl -u $SS_USER:$SS_PASS -o - "ftp://$SS_FTP_HOST$SS_PATH.snapshots")
 
 	if [[ $HEAD_SHA == "" ]]; then
-		echo "Errore, nessun snapshots trovato in remoto."
+		echo "Error, snapshot not found on host server."
 		exit -1
 	fi
 
-	echo -n "Stai per creare un revert fino al commit $TARGET, ok? [y/n]: "
+	echo -n "Do you really want to go back to commit $TARGET ? [y/n]: "
 	read ASK_REVERT
 
 	if [[ $ASK_REVERT == 'y' ]]; then
