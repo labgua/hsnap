@@ -109,7 +109,7 @@ install_rpc(){
 	sed -i "s/###DIR_INST###/$SS_PATH_RPC/" "$SS_DIR/index.php"
 
 	echo ">>> Sending to host ..."
-	ftp_send $SS_PATH_RPC "{index.php,actions.php}" ##???
+	ftp_send $SS_PATH_RPC "{$SS_DIR/index.php,$SS_DIR/actions.php}"
 	rm "$SS_DIR/index.php"
 	echo ">>> rpc URI: $SS_HOST$SS_PATH_RPC"
 	echo ">>> SECRET: $NEW_SS_SECRET"
