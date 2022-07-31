@@ -1,13 +1,13 @@
 
-echo "snapshot.sh"
-echo "LABGUA SOFTWARE 2020"
-echo "(PWD): $PWD"
-
 #loading config & set working directory
 SS_DIR=$(dirname "$0")
 cd "$SS_DIR"
 source .conf.snapshot
 cd "$SS_WORKING_DIR"
+
+echo "snapshot.sh"
+echo "LABGUA SOFTWARE 2020"
+echo "(PWD): $PWD"
 
 ss_info(){
 	echo "List Actions"
