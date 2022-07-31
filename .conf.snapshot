@@ -8,3 +8,5 @@ SS_PATH="/path/of/project/"
 
 SS_SECRET="MAGICSECRET"
 SS_PATH_RPC="/path/to/rpc/"
+
+SS_WORKING_DIR=../

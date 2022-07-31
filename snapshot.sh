@@ -15,8 +15,11 @@ if [[ $# == 0 ]]; then
 	exit 0
 fi
 
-#loading config
+#loading config & set working directory
+SS_DIR=$(dirname "$0")
+cd "SS_DIR"
 source .conf.snapshot
+cd "$SS_WORKING_DIR"
 
 ACTION=$1
 
