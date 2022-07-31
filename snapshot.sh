@@ -1,4 +1,8 @@
 
+echo "snapshot.sh"
+echo "LABGUA SOFTWARE 2020"
+echo "(PWD): $PWD"
+
 #loading config & set working directory
 SS_DIR=$(dirname "$0")
 cd "$SS_DIR"
@@ -6,9 +10,6 @@ source .conf.snapshot
 cd "$SS_WORKING_DIR"
 
 ss_info(){
-	echo "snapshot.sh"
-	echo "LABGUA SOFTWARE 2020"
-	echo "(PWD): $PWD"
 	echo "List Actions"
 	echo "> init"
 	echo "> install_rpc"
