@@ -101,12 +101,12 @@ install_rpc(){
 
 	echo ">>> Updating .conf.snapshot with new secret ..."
 	NEW_SS_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-	sed -i "s/$SS_SECRET/$NEW_SS_SECRET/" ".conf.snapshot"
+	sed -i "s/$SS_SECRET/$NEW_SS_SECRET/" "$SS_DIR/.conf.snapshot"
 
 	echo ">>> Generating php rpc server ..."
-	cp "index.php.template" "index.php"
-	sed -i "s/###SECRET###/$NEW_SS_SECRET/" "index.php"
-	sed -i "s/###DIR_INST###/$SS_PATH_RPC/" "index.php"
+	cp "$SS_DIR/index.php.template" "$SS_DIR/index.php"
+	sed -i "s/###SECRET###/$NEW_SS_SECRET/" "$SS_DIR/index.php"
+	sed -i "s/###DIR_INST###/$SS_PATH_RPC/" "$SS_DIR/index.php"
 
 	echo ">>> Sending to host ..."
 	ftp_send $SS_PATH_RPC "{index.php,actions.php}"
