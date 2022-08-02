@@ -1,12 +1,14 @@
 
 #loading config & set working directory
 SS_DIR=$(dirname "$0")
+ABS_SS_DIR=$(readlink -f $SS_DIR)
 cd "$SS_DIR"
 source .conf.snapshot
 cd "$SS_WORKING_DIR"
 
 echo "HSnap"
 echo "LABGUA SOFTWARE 2020"
+echo "(SS_DIR): $SS_DIR <- $ABS_SS_DIR"
 echo "(WORKING_DIR): $PWD"
 
 ss_info(){
@@ -141,17 +143,18 @@ init_project(){
 	else
 		echo ">>> NO rules, adding to .gitignore ..."
 
+		## HP: ABS_SS_DIR := WORKING_DIR + RELATIVE_PREFIX_PATH
+		##  -> RELATIVE_PREFIX_PATH = ABS_SS_DIR - WORKING_DIR
+		RELATIVE_PREFIX_PATH="${ABS_SS_DIR/$PWD/""}/" 
+
 		echo "" >> .gitignore
 		echo "###> snapshot.sh ignore ###" >> .gitignore
-		echo "actions.php" >> .gitignore
-		echo "index.php.template" >> .gitignore
-		echo "snapshot.sh" >> .gitignore
-		echo ".conf.snapshot" >> .gitignore
-		echo ".snapshots" >> .gitignore
+		echo $RELATIVE_PREFIX_PATH >> .gitignore
 		echo "###< snapshot.sh ignore ###" >> .gitignore
 
 		echo ">>> resync git repo with new .gitignore file"
 		#https://stackoverflow.com/questions/7075923/resync-git-repo-with-new-gitignore-file
+		# if "fatal: pathspec '...' did not match any files" it's ok, https://ar.al/2389/
 		git rm -r --cached .
 		git add .
 		git commit -m "setting .gitignore for snapshot.sh"
