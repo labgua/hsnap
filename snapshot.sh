@@ -28,6 +28,13 @@ fi
 
 ACTION=$1
 
+#encode string sed, utils for sed
+es_sed(){
+	INPUT=$1
+	OUT=${INPUT//'/'/'\/'} # rule: slash replacement
+	echo $OUT
+}
+
 update(){
 	TARGET=$1
 	OUT_ZIPFILE=$2
@@ -111,7 +118,7 @@ install_rpc(){
 	echo ">>> Generating php rpc server ..."
 	cp "$SS_DIR/index.php.template" "$SS_DIR/index.php"
 	sed -i "s/###SECRET###/$NEW_SS_SECRET/" "$SS_DIR/index.php"
-	sed -i "s/###DIR_INST###/$SS_PATH_RPC/" "$SS_DIR/index.php"
+	sed -i "s/###DIR_INST###/$(es_sed $SS_PATH_RPC)/" "$SS_DIR/index.php" ### todo: aggiustare problema caratteri speciali, nel path c'è '/' 
 
 	echo ">>> Sending to host ..."
 	ftp_send $SS_PATH_RPC "{$SS_DIR/index.php,$SS_DIR/actions.php}"
